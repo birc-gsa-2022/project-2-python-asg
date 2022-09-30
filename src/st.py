@@ -199,18 +199,6 @@ def read_fastq():
 ################################################################
 # Code:
     
-# if __name__ == '__main__':
-    
-#     ref = 'mississippi'
-#     tree = SuffixTree(ref)
-#     read = 'ss'
-#     # print([t for t in bf_order(tree)])  # all nodes.
-#     subtree = match_seq(tree, ref, read)
-#     print([t for t in bf_order(subtree) if t[3] != None]) # all positions/occurrences of read/pattern (see list_position[3]; 'ss' = 2 and 5 in 'mississippi).
-
-
-
-    
 if __name__ == '__main__':
     
     fasta_recs = read_fasta()
@@ -231,16 +219,5 @@ if __name__ == '__main__':
                 cigar = edits_to_cigar(edits[2])
                 output = [read_name,fa_rec[0],str(match+1),cigar,read_seq]
                 print('\t'.join(output))
-        
-            
-            
-            # matches = ba_algorithm(fa_rec[1], fq_rec[1])
-            # for match in matches:
-            #     read_name = fq_rec[0]
-            #     read_seq = fq_rec[1]
-            #     edits = get_edits(read_seq, fa_rec[1][match:match+len(fq_rec[1])])
-            #     cigar = edits_to_cigar(edits[2])
-            #     output = [read_name,fa_rec[0],str(match+1),cigar,read_seq]
-            #     print('\t'.join(output))
         
 ################################################################
