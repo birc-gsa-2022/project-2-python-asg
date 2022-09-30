@@ -53,6 +53,7 @@ def SuffixTree(string):
     tree = Node(None,None,None)  # create root.
     count = 0  # enables tracking of longest path (since we iterate left->right each iteration will continuously add longest->shortest path).
     for i in range(len(string)):  # loop through all suffixes.
+        #print(count)
         current = tree  # set root as starting point.
         j = i # set i as startpoint for j and use k (see below) to increment j inside (nodes) while loop.
         while j < len(string):  # from the root walk down as far as possible.
@@ -132,6 +133,7 @@ def match_seq(tree, ref, read):
    
     i=0
     while i < len(read):
+        # print(i, len(read))
         if read[i] not in current.out:
             return None
         child = current.out[read[i]]
@@ -143,10 +145,12 @@ def match_seq(tree, ref, read):
         if j-i == len(lab):
             current = child
             i = j  
-        if seq == read or j == len(read):
+        elif seq == read or j == len(read):
             return child
+        else:
+            return None
     else:
-        return None
+        return current
     
 
 def read_fasta():
