@@ -99,6 +99,7 @@ def bf_order(tree):
         return []
 
     queue = deque([tree])
+
     while queue:
         if type(queue[-1]) is type(Node(None,None,None)):
             tmp = queue.pop()
@@ -198,7 +199,7 @@ def read_fastq():
 # Code:
     
 if __name__ == '__main__':
-    
+
     fasta_recs = read_fasta()
     fastq_recs = read_fastq()
     
@@ -217,5 +218,6 @@ if __name__ == '__main__':
                 cigar = edits_to_cigar(edits[2])
                 output = [read_name,fa_rec[0],str(match+1),cigar,read_seq]
                 print('\t'.join(output))
+          
         
 ################################################################
