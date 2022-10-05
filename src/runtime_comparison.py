@@ -26,16 +26,16 @@ def suffixtree_read_mapper(ref, read):
 ################################################################
 # tests:
   
-# Test suffixtree-algorithm vs naive-algorithm for same result:
-for i in range(500000+1):
-    print('Iteration nr: ', i+1)
-    ref = simulate_string(random.randint(30,90))
-    read = get_exact_read(ref, random.randint(1,20))
-    if suffixtree_read_mapper(ref, read).sort() != naive_algorithm(ref,read).sort():
-        print('Algorithm mistake!')
-        break
-    if i == 500000:
-        print('DONE')
+# # Test suffixtree-algorithm vs naive-algorithm for same result:
+# for i in range(500000+1):
+#     print('Iteration nr: ', i+1)
+#     ref = simulate_string(random.randint(30,90))
+#     read = get_exact_read(ref, random.randint(1,20))
+#     if suffixtree_read_mapper(ref, read).sort() != naive_algorithm(ref,read).sort():
+#         print('Algorithm mistake!')
+#         break
+#     if i == 500000:
+#         print('DONE')
 
 
 # Runtimes for the tree construction (varying ref lengths):

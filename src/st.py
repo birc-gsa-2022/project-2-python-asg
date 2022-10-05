@@ -13,29 +13,18 @@ from align import get_edits
 # Classes
 
 class Node(object):
-    def __init__(self, start, end, length, lable=None):
+    def __init__(self, start, end, lable=None):
         self.start = start  # start_index of node (with respect to ref-string position).
         self.end = end  # end_index of node (with respect to ref-string position).
-        self.length = length  # length of node  (end_index - start_index).
         self.out = {}  # dict containing children of node (named character corresponfing to start_index)
-        self.lable = lable  # order of longest paths (longest=0)
+        self.lable = lable  # order of longest suffixes (longest=0)
         
 #############################################
 # Functions
 
-def repString(string:str, start:int, end:int):
-    '''Function for representing a string (so we dont
-    have to store the whole thing).
-    
-    '''
-    if string == '' or string == None:
-        return []
-    return string[start:end]
-
-
 def SuffixTree(string):
     ''' Function for building a suffix tree (naive approach). 
-    Starts from left (beginning with longest suffix = the whole string). For each
+    Starts from left (beginning with longest suffix (whole string)). For each
     iteration follows path as far as possible and adds branch ($ if all path existed; 
     new 'long' node/subtree if first letter didnt exist in root node).
     
@@ -44,14 +33,15 @@ def SuffixTree(string):
     tree = SuffixTree(ref)
     read = 'aba'
     print([t for t in bf_order(tree)])
-    
+    #>>> [[None, None, None], [0, 1, None], [1, 3, None], [6, 7, 6], [3, 7, 2], [1, 3, None], [6, 7, 5], [6, 7, 4], [3, 7, 1], [6, 7, 3], [3, 7, 0]]
     '''
     if string == '' or string == None:
-        return []
+        return None
 
     string += '$'  # add sentinal to string.
-    tree = Node(None,None,None)  # create root.
-    count = 0  # enables tracking of longest path (since we iterate left->right each iteration will continuously add longest->shortest path).
+    tree = Node(None,None)  # create root.
+    
+    count = 0  # enables tracking of longest suffix (since we iterate left->right each iteration will continuously add longest->shortest suffix).
     for i in range(len(string)):  # loop through all suffixes.
         #print(count)
         current = tree  # set root as starting point.
@@ -59,7 +49,7 @@ def SuffixTree(string):
         while j < len(string):  # from the root walk down as far as possible.
             if string[j] in current.out:  # if a child contains 'first' letter, go that direction.
                 child = current.out[string[j]]  
-                val = repString(string, child.start, child.end)
+                val = string[child.start:child.end]
                 k = j+1  
                 # if value of child contains multible letters go throug 
                 # all and see if they match, if end of value is reach (node
@@ -71,39 +61,37 @@ def SuffixTree(string):
                     j = k
                # if node only contains some of the letters we split/branch it at last matching index.
                 else:   
-                    branch = Node(child.start, child.start + k-j, child.start+k-j-child.start)  # create branch node.
-                    branch.out[string[k]] = Node(k,len(string), len(string)-k, count)  # add new child to branch.
+                    branch = Node(child.start, child.start + k-j)  # create branch node.
+                    branch.out[string[k]] = Node(k,len(string), count)  # add new child to branch.
                     branch.out[val[k-j]] = child  # add existing child to branch.
                     child.start = child.start + k-j  # edit start position of existing child.
-                    child.length = child.end - child.start  # edit length of existing child.
                     current.out[string[j]] = branch  # replace existing node with new branched node.
                     count+=1
-            # if no children contains first letter of suffix, node containing whole suffix is added (e.g. first run/step).
+            # if no children contains first letter of suffix, node containing whole suffix is added (e.g. first step).
             else:  
-                current.out[string[j]] = Node(j, len(string), len(string)-j, count)
+                current.out[string[j]] = Node(j, len(string), count)
                 count+=1
     return tree
 
 def bf_order(tree):
     '''Breath-first traversal using queue.
-    Returns list containing all Node() values [start, end, length, lable].
+    Returns list containing all Node() values [start, end, lable].
     
     Example:
     tree = SuffixTree('abab')
     print([t for t in bf_order(tree)])
-    [[None, None, None, None], [0, 2, 2, None], [1, 2, 1, None], [4, 5, 1, 4],
-     [4, 5, 1, 2], [2, 5, 3, 0], [4, 5, 1, 3], [2, 5, 3, 1]]
+    #>>> [[None, None, None], [0, 2, None], [1, 2, None], [4, 5, 4], [4, 5, 2], [2, 5, 0], [4, 5, 3], [2, 5, 1]]
     
     '''
     if tree == '' or tree == None:
-        return []
+        return None
 
     queue = deque([tree])
 
     while queue:
         if type(queue[-1]) is type(Node(None,None,None)):
             tmp = queue.pop()
-            queue.appendleft([tmp.start,tmp.end,tmp.length,tmp.lable])
+            queue.appendleft([tmp.start,tmp.end,tmp.lable])
             for sub in tmp.out:
                 queue.appendleft(tmp.out[sub])
         elif isinstance(queue[-1], list) == True:
@@ -116,18 +104,19 @@ def match_seq(tree, ref, read):
     '''Matches if read/pattern exists in tree and returns below subtree.
     
     Example:
-    ref = 'abaaba'
+    ref = 'mississippi'
     tree = SuffixTree(ref)
-    read = 'aba'
+    read = 'ss'
     subtree = match_seq(tree, ref, read)
-    print([t for t in bf_order(subtree)])
+    print([t for t in bf_order(subtree) if t[2] != None])
+    #>>> [[8, 12, 5], [5, 12, 2]]
     '''
     if tree == '' or tree == None:
-        return []
+        return None
     if ref == '' or ref == None:
-        return []
+        return None
     if read == '' or read == None:
-        return []
+        return None
 
     current = tree
     seq=''
@@ -138,7 +127,7 @@ def match_seq(tree, ref, read):
         if read[i] not in current.out:
             return None
         child = current.out[read[i]]
-        lab = repString(ref, child.start, child.end)
+        lab = ref[child.start:child.end]
         j=i+1
         while j-i < len(lab) and j < len(read) and read[j] == lab[j-i]:
             seq+=lab[j-i]
@@ -209,9 +198,9 @@ if __name__ == '__main__':
         for fq_rec in fastq_recs:
             read = fq_rec[1]
             subtree = match_seq(tree, ref, read)
-            matches = [t for t in bf_order(subtree) if t[3] != None]
+            matches = [t for t in bf_order(subtree) if t[2] != None]
             for match in matches:
-                match = match[3]
+                match = match[2]
                 read_name = fq_rec[0]
                 read_seq = fq_rec[1]
                 edits = get_edits(read_seq, fa_rec[1][match:match+len(fq_rec[1])])
@@ -221,3 +210,8 @@ if __name__ == '__main__':
           
         
 ################################################################
+
+
+
+
+
