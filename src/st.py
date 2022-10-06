@@ -13,11 +13,11 @@ from align import get_edits
 # Classes
 
 class Node(object):
-    def __init__(self, start, end, lable=None):
+    def __init__(self, start, end, suffix_order_leaf=None):
         self.start = start  # start_index of node (with respect to ref-string position).
         self.end = end  # end_index of node (with respect to ref-string position).
         self.out = {}  # dict containing children of node (named character corresponfing to start_index)
-        self.lable = lable  # order of longest suffixes (longest=0)
+        self.suffix_order_leaf = suffix_order_leaf  # order of longest suffixes (longest=0)
         
 #############################################
 # Functions
@@ -75,7 +75,7 @@ def SuffixTree(string):
 
 def bf_order(tree):
     '''Breath-first traversal using queue.
-    Returns list containing all Node() values [start, end, lable].
+    Returns list containing all Node() values [start, end, suffix_order_leaf].
     
     Example:
     tree = SuffixTree('abab')
@@ -91,7 +91,7 @@ def bf_order(tree):
     while queue:
         if type(queue[-1]) is type(Node(None,None,None)):
             tmp = queue.pop()
-            queue.appendleft([tmp.start,tmp.end,tmp.lable])
+            queue.appendleft([tmp.start,tmp.end,tmp.suffix_order_leaf])
             for sub in tmp.out:
                 queue.appendleft(tmp.out[sub])
         elif isinstance(queue[-1], list) == True:
@@ -141,7 +141,7 @@ def match_seq(tree, ref, read):
             return None
     else:
         return current
-    
+
 
 def read_fasta():
     # load input:
@@ -210,8 +210,6 @@ if __name__ == '__main__':
           
         
 ################################################################
-
-
 
 
 

@@ -19,14 +19,14 @@ from SEQsimulator import get_exact_read
 def suffixtree_read_mapper(ref, read):
     tree = SuffixTree(ref)
     subtree = match_seq(tree, ref, read)
-    matches = [t for t in bf_order(subtree) if t[3] != None]
-    all_matches = [t[3] for t in matches]
+    matches = [t for t in bf_order(subtree) if t[2] != None]
+    all_matches = [t[2] for t in matches]
     return all_matches
 
 ################################################################
 # tests:
   
-# # Test suffixtree-algorithm vs naive-algorithm for same result:
+# Test suffixtree-algorithm vs naive-algorithm for same result:
 # for i in range(500000+1):
 #     print('Iteration nr: ', i+1)
 #     ref = simulate_string(random.randint(30,90))
@@ -91,40 +91,40 @@ for idx in range(5):
         # to do with loading the modules??
         read = get_exact_read(ref, 10)
         subtree = match_seq(tree, ref, read)
-        matches = [t for t in bf_order(subtree) if t[3] != None]
+        matches = [t for t in bf_order(subtree) if t[2] != None]
         
         read = get_exact_read(ref, read_lengths_20[idx])
         start_time = time.time()
         subtree = match_seq(tree, ref, read)
-        matches = [t for t in bf_order(subtree) if t[3] != None]
+        matches = [t for t in bf_order(subtree) if t[2] != None]
         end_time = time.time()
         runtimes_20_replicate.append(end_time-start_time)
         
         read = get_exact_read(ref, read_lengths_30[idx])
         start_time = time.time()
         subtree = match_seq(tree, ref, read)
-        matches = [t for t in bf_order(subtree) if t[3] != None]
+        matches = [t for t in bf_order(subtree) if t[2] != None]
         end_time = time.time()
         runtimes_30_replicate.append(end_time-start_time)
         
         read = get_exact_read(ref, read_lengths_40[idx])
         start_time = time.time()
         subtree = match_seq(tree, ref, read)
-        matches = [t for t in bf_order(subtree) if t[3] != None]
+        matches = [t for t in bf_order(subtree) if t[2] != None]
         end_time = time.time()
         runtimes_40_replicate.append(end_time-start_time)
         
         read = get_exact_read(ref, read_lengths_50[idx])
         start_time = time.time()
         subtree = match_seq(tree, ref, read)
-        matches = [t for t in bf_order(subtree) if t[3] != None]
+        matches = [t for t in bf_order(subtree) if t[2] != None]
         end_time = time.time()
         runtimes_50_replicate.append(end_time-start_time)
         
         read = get_exact_read(ref, read_lengths_10[idx])
         start_time = time.time()
         subtree = match_seq(tree, ref, read)
-        matches = [t for t in bf_order(subtree) if t[3] != None]
+        matches = [t for t in bf_order(subtree) if t[2] != None]
         end_time = time.time()
         runtimes_10_replicate.append(end_time-start_time)
         
