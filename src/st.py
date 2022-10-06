@@ -40,36 +40,39 @@ def SuffixTree(string):
 
     string += '$'  # add sentinal to string.
     tree = Node(None,None)  # create root.
+    string_length = len(string)
     
     count = 0  # enables tracking of longest suffix (since we iterate left->right each iteration will continuously add longest->shortest suffix).
-    for i in range(len(string)):  # loop through all suffixes.
+    for i in range(string_length):  # loop through all suffixes.
         #print(count)
         current = tree  # set root as starting point.
         j = i # set i as startpoint for j and use k (see below) to increment j inside (nodes) while loop.
-        while j < len(string):  # from the root walk down as far as possible.
+        while j < string_length:  # from the root walk down as far as possible.
             if string[j] in current.out:  # if a child contains 'first' letter, go that direction.
-                child = current.out[string[j]]  
-                val = string[child.start:child.end]
-                k = j+1  
+                child = current.out[string[j]]
+                length = child.end-child.start
+                k = j+1
                 # if value of child contains multible letters go throug 
                 # all and see if they match, if end of value is reach (node
                 # gets exhausted) proceed to next child (if it exists).
-                while k-j < len(val) and string[k] == val[k-j]:
+                while k-j < length and k == child.start+k-j:
                     k += 1
-                if k-j == len(val):
+                num = k-j
+                if num == length:
                     current = child 
                     j = k
                # if node only contains some of the letters we split/branch it at last matching index.
-                else:   
-                    branch = Node(child.start, child.start + k-j)  # create branch node.
-                    branch.out[string[k]] = Node(k,len(string), count)  # add new child to branch.
-                    branch.out[val[k-j]] = child  # add existing child to branch.
-                    child.start = child.start + k-j  # edit start position of existing child.
+                else:
+                    start_edited = child.start+num
+                    branch = Node(child.start, start_edited)  # create branch node.
+                    branch.out[string[k]] = Node(k,string_length, count)  # add new child to branch.
+                    branch.out[string[start_edited]] = child  # add existing child to branch.
+                    child.start = start_edited  # edit start position of existing child.
                     current.out[string[j]] = branch  # replace existing node with new branched node.
                     count+=1
             # if no children contains first letter of suffix, node containing whole suffix is added (e.g. first step).
             else:  
-                current.out[string[j]] = Node(j, len(string), count)
+                current.out[string[j]] = Node(j, string_length, count)
                 count+=1
     return tree
 
@@ -210,6 +213,5 @@ if __name__ == '__main__':
           
         
 ################################################################
-
 
 
