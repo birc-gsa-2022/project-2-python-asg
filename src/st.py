@@ -49,13 +49,13 @@ def SuffixTree(string):
         j = i # set i as startpoint for j and use k (see below) to increment j inside (nodes) while loop.
         while j < string_length:  # from the root walk down as far as possible.
             if string[j] in current.out:  # if a child contains 'first' letter, go that direction.
-                child = current.out[string[j]]
+                child = current.out[string[j]]  
                 length = child.end-child.start
-                k = j+1
+                k = j+1  
                 # if value of child contains multible letters go throug 
                 # all and see if they match, if end of value is reach (node
                 # gets exhausted) proceed to next child (if it exists).
-                while k-j < length and k == child.start+k-j:
+                while k-j < length and string[k] == string[child.start+k-j]:
                     k += 1
                 num = k-j
                 if num == length:
@@ -63,7 +63,7 @@ def SuffixTree(string):
                     j = k
                # if node only contains some of the letters we split/branch it at last matching index.
                 else:
-                    start_edited = child.start+num
+                    start_edited = child.start + num
                     branch = Node(child.start, start_edited)  # create branch node.
                     branch.out[string[k]] = Node(k,string_length, count)  # add new child to branch.
                     branch.out[string[start_edited]] = child  # add existing child to branch.
@@ -190,28 +190,33 @@ def read_fastq():
 ################################################################
 # Code:
     
-if __name__ == '__main__':
+# if __name__ == '__main__':
 
-    fasta_recs = read_fasta()
-    fastq_recs = read_fastq()
+#     fasta_recs = read_fasta()
+#     fastq_recs = read_fastq()
     
-    for fa_rec in fasta_recs:
-        ref = fa_rec[1]
-        tree = SuffixTree(ref)
-        for fq_rec in fastq_recs:
-            read = fq_rec[1]
-            subtree = match_seq(tree, ref, read)
-            matches = [t for t in bf_order(subtree) if t[2] != None]
-            for match in matches:
-                match = match[2]
-                read_name = fq_rec[0]
-                read_seq = fq_rec[1]
-                edits = get_edits(read_seq, fa_rec[1][match:match+len(fq_rec[1])])
-                cigar = edits_to_cigar(edits[2])
-                output = [read_name,fa_rec[0],str(match+1),cigar,read_seq]
-                print('\t'.join(output))
+#     for fa_rec in fasta_recs:
+#         ref = fa_rec[1]
+#         tree = SuffixTree(ref)
+#         for fq_rec in fastq_recs:
+#             read = fq_rec[1]
+#             subtree = match_seq(tree, ref, read)
+#             matches = [t for t in bf_order(subtree) if t[2] != None]
+#             for match in matches:
+#                 match = match[2]
+#                 read_name = fq_rec[0]
+#                 read_seq = fq_rec[1]
+#                 edits = get_edits(read_seq, fa_rec[1][match:match+len(fq_rec[1])])
+#                 cigar = edits_to_cigar(edits[2])
+#                 output = [read_name,fa_rec[0],str(match+1),cigar,read_seq]
+#                 print('\t'.join(output))
           
         
 ################################################################
 
+ref = 'mississippi'
+tree = SuffixTree(ref)
+read = 'ss'
+subtree = match_seq(tree, ref, read)
+print([t for t in bf_order(subtree) if t[2] != None])
 
