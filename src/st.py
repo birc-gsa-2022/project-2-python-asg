@@ -190,26 +190,26 @@ def read_fastq():
 ################################################################
 # Code:
     
-# if __name__ == '__main__':
+if __name__ == '__main__':
 
-#     fasta_recs = read_fasta()
-#     fastq_recs = read_fastq()
+    fasta_recs = read_fasta()
+    fastq_recs = read_fastq()
     
-#     for fa_rec in fasta_recs:
-#         ref = fa_rec[1]
-#         tree = SuffixTree(ref)
-#         for fq_rec in fastq_recs:
-#             read = fq_rec[1]
-#             subtree = match_seq(tree, ref, read)
-#             matches = [t for t in bf_order(subtree) if t[2] != None]
-#             for match in matches:
-#                 match = match[2]
-#                 read_name = fq_rec[0]
-#                 read_seq = fq_rec[1]
-#                 edits = get_edits(read_seq, fa_rec[1][match:match+len(fq_rec[1])])
-#                 cigar = edits_to_cigar(edits[2])
-#                 output = [read_name,fa_rec[0],str(match+1),cigar,read_seq]
-#                 print('\t'.join(output))
+    for fa_rec in fasta_recs:
+        ref = fa_rec[1]
+        tree = SuffixTree(ref)
+        for fq_rec in fastq_recs:
+            read = fq_rec[1]
+            subtree = match_seq(tree, ref, read)
+            matches = [t for t in bf_order(subtree) if t[2] != None]
+            for match in matches:
+                match = match[2]
+                read_name = fq_rec[0]
+                read_seq = fq_rec[1]
+                edits = get_edits(read_seq, fa_rec[1][match:match+len(fq_rec[1])])
+                cigar = edits_to_cigar(edits[2])
+                output = [read_name,fa_rec[0],str(match+1),cigar,read_seq]
+                print('\t'.join(output))
           
         
 ################################################################
