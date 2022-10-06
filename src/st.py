@@ -214,9 +214,3 @@ def read_fastq():
         
 ################################################################
 
-ref = 'mississippi'
-tree = SuffixTree(ref)
-read = 'ss'
-subtree = match_seq(tree, ref, read)
-print([t for t in bf_order(subtree) if t[2] != None])
-
